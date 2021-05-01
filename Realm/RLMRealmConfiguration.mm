@@ -99,8 +99,12 @@ NSString *RLMRealmPathForFile(NSString *fileName) {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        static NSURL *defaultRealmURL = [NSURL fileURLWithPath:RLMRealmPathForFile(c_defaultRealmFileName)];
-        self.fileURL = defaultRealmURL;
+        if ([NSProcessInfo.processInfo.environment[@"XCODE_RUNNING_FOR_PREVIEWS"] isEqualToString:@"1"]) {
+            [self setInMemoryIdentifier:@"SwiftUIXcodePreview"];
+        } else {
+            static NSURL *defaultRealmURL = [NSURL fileURLWithPath:RLMRealmPathForFile(c_defaultRealmFileName)];
+            self.fileURL = defaultRealmURL;
+        }
         self.schemaVersion = 0;
         self.cache = YES;
     }
